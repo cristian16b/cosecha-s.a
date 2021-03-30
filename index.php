@@ -31,7 +31,10 @@ if(isset($_POST["submit"])) {
             }
             else {
                 while ($usuario = $resultado->fetch_assoc()) {
-                    if(password_verify($_POST['password'],$usuario['contraseña'])) {
+                    $hashed_password = password_hash($usuario['contraseña'], PASSWORD_DEFAULT);
+                    if(password_verify($usuario['contraseña'],$hashed_password)) {
+                        session_start();
+                        $_SESSION['username'] = $_POST['username'];
                         header("Location: ./panel.php");
                     }
                     else {
