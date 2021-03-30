@@ -1,3 +1,42 @@
+<?php
+
+require_once("conexion.php");
+
+$errorLogin = "";
+
+if(isset($_POST)) {
+
+    if(isset($_POST['username']) && $_POST['username'] == "" && isset($_POST['password']) && $_POST['password'] == "") {
+        $errorLogin = "Debe ingresar el nombre de usuario y la contraseña.";
+    }
+    else if(isset($_POST['username']) && $_POST['username'] == "") {
+        $errorLogin = "Debe ingresar el nombre de usuario.";
+    }
+    else if(isset($_POST['password']) && $_POST['password'] == "") {
+        $errorLogin = "Debe ingresar la contraseña.";
+    }
+
+    // procedemos a verificar la contraseña
+    $resultado = $mysqli->query("SELECT contraseña FROM usuario where email = " . trim($_POST['username']) );
+
+    if($resultado->num_rows === 0) {
+        $errorLogin = "Usuario no encontrado.";
+    }
+    else {
+        while ($usuario = $resultado->fetch_assoc()) {
+            $hashed_password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+            if(password_verify($_POST['password'], $hashed_password)) {
+                header("Location: ./panel.php");
+            }
+            else {
+                $errorLogin = "Usuario y/o contraseña incorrecto.";
+            }
+        }
+    }
+}
+
+
+?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -31,19 +70,21 @@
 
                 <div class="col-lg-12 login-form">
                     <div class="col-lg-12 login-form">
-                        <form action="./index.html" method="post">
+                        <form action="index.php" method="post">
                             <div class="form-group">
                                 <label class="form-control-label">USERNAME</label>
-                                <input type="text" class="form-control">
+                                <input name="username" type="text" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label class="form-control-label">PASSWORD</label>
-                                <input type="password" class="form-control" i>
+                                <input name="password" type="password" class="form-control" i>
                             </div>
 
                             <div class="col-lg-12 loginbttm">
                                 <div class="col-lg-6 login-btm login-text">
-                                    <!-- Error Message -->
+                                    <?php 
+                                        echo $errorLogin;
+                                    ?>
                                 </div>
                                 <div class="col-lg-6 login-btm login-button">
                                     <button type="submit" class="btn btn-outline-primary">LOGIN</button>
