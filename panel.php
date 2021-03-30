@@ -1,3 +1,7 @@
+<?php 
+session_start();
+// var_dump($_SESSION);
+?>
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
@@ -490,23 +494,30 @@ main.l-main .page-title {
     <div class="l-sidebar__content">
       <nav class="c-menu js-menu">
         <ul class="u-list">
-          <li class="c-menu__item is-active" data-toggle="tooltip" title="Registrar Usuario">
-            <div class="c-menu__item__inner"><i class="fa fa-user"></i>
-              <div class="c-menu-item__title"><span>Registrar Usuario</span></div>
-            </div>
-          </li>
-          <li class="c-menu__item has-submenu" data-toggle="tooltip" title="Listado de Usuarios">
-            <div class="c-menu__item__inner"><i class="fa fa-list"></i>
-              <div class="c-menu-item__title"><span>Listado de Usuarios</span></div>
-              <div class="c-menu-item__expand js-expand-submenu"><i class="fa fa-angle-down"></i></div>
-            </div>
-            <ul class="c-menu__submenu u-list">
-              <li>Payments</li>
-              <li>Maps</li>
-              <li>Notifications</li>
-            </ul>
-          </li>
-          <li class="c-menu__item has-submenu" data-toggle="tooltip" title="Statistics">
+          <?php 
+            if($_SESSION['rol'] == "usuario")  {
+          ?>
+            <li class="c-menu__item is-active" data-toggle="tooltip" title="Registrar Usuario">
+              <div class="c-menu__item__inner"><i class="fa fa-user"></i>
+                <div class="c-menu-item__title"><span>Registrar Usuario</span></div>
+              </div>
+            </li>
+          <?php 
+            }
+          ?>
+          <?php 
+            if($_SESSION['rol'] == "administrador")  {
+          ?>
+            <li class="c-menu__item has-submenu" data-toggle="tooltip" title="Listado de Usuarios">
+              <div class="c-menu__item__inner"><i class="fa fa-list"></i>
+                <div class="c-menu-item__title"><span>Listado de Usuarios</span></div>
+                <div class="c-menu-item__expand js-expand-submenu"><i class="fa fa-angle-down"></i></div>
+              </div>
+            </li>
+          <?php 
+            }
+          ?>
+          <!-- <li class="c-menu__item has-submenu" data-toggle="tooltip" title="Statistics">
             <div class="c-menu__item__inner"><i class="fa fa-bar-chart"></i>
               <div class="c-menu-item__title"><span>Statistics</span></div>
             </div>
@@ -520,7 +531,7 @@ main.l-main .page-title {
             <div class="c-menu__item__inner"><i class="fa fa-cogs"></i>
               <div class="c-menu-item__title"><span>Settings</span></div>
             </div>
-          </li>
+          </li> -->
         </ul>
       </nav>
     </div>
