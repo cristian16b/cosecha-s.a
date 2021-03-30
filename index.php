@@ -21,7 +21,7 @@ if(isset($_POST["submit"])) {
 
     if(isset($_POST['username']) && $_POST['username'] != "" && isset($_POST['password']) && $_POST['password'] != "") {
            // procedemos a verificar la contraseña
-        $sql = "SELECT contraseña FROM usuario where email = " . "'" . trim($_POST['username']) . "'";
+        $sql = "SELECT contraseña,rol_id FROM usuario where email = " . "'" . trim($_POST['username']) . "'";
         //echo $sql;
         $resultado = $conexion->query($sql);
 
@@ -35,7 +35,13 @@ if(isset($_POST["submit"])) {
                     if(password_verify($usuario['contraseña'],$hashed_password)) {
                         session_start();
                         $_SESSION['username'] = $_POST['username'];
-                        header("Location: ./panel.php");
+                        if($usuario['rol_id'] == "1") {
+                            $_SESSION['rol'] = "administrador";
+                            header("Location: ./panel.php");
+                        } else {
+                            $_SESSION['rol'] = "usuario";
+                            header("Location: ./panel.php");
+                        }
                     }
                     else {
                         $errorLogin = "Usuario y/o contraseña incorrecto.";
