@@ -4,7 +4,10 @@ require_once("conexion.php");
 
 $errorLogin = "";
 
-if(isset($_POST)) {
+?>
+<?php
+
+if(isset($_POST["submit"])) {
 
     if(isset($_POST['username']) && $_POST['username'] == "" && isset($_POST['password']) && $_POST['password'] == "") {
         $errorLogin = "Debe ingresar el nombre de usuario y la contraseña.";
@@ -16,26 +19,32 @@ if(isset($_POST)) {
         $errorLogin = "Debe ingresar la contraseña.";
     }
 
-    // procedemos a verificar la contraseña
-    $resultado = $mysqli->query("SELECT contraseña FROM usuario where email = " . trim($_POST['username']) );
+    if(isset($_POST['username']) && $_POST['username'] != "" && isset($_POST['password']) && $_POST['password'] != "") {
+           // procedemos a verificar la contraseña
+        $sql = "SELECT contraseña FROM usuario where email = " . "'" . trim($_POST['username']) . "'";
+        //echo $sql;
+        $resultado = $conexion->query($sql);
 
-    if($resultado->num_rows === 0) {
-        $errorLogin = "Usuario no encontrado.";
-    }
-    else {
-        while ($usuario = $resultado->fetch_assoc()) {
-            $hashed_password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-            if(password_verify($_POST['password'], $hashed_password)) {
-                header("Location: ./panel.php");
+        if($resultado) {
+            if($resultado->num_rows == 0) {
+                $errorLogin = "Usuario no encontrado.";
             }
             else {
-                $errorLogin = "Usuario y/o contraseña incorrecto.";
+                while ($usuario = $resultado->fetch_assoc()) {
+                    if(password_verify($_POST['password'],$usuario['contraseña'])) {
+                        header("Location: ./panel.php");
+                    }
+                    else {
+                        $errorLogin = "Usuario y/o contraseña incorrecto.";
+                    }
+                }
             }
+        }
+        else {
+            $errorLogin = "Ocurrio un error inesperado.";
         }
     }
 }
-
-
 ?>
 <!doctype html>
 <html lang="en">
@@ -70,7 +79,7 @@ if(isset($_POST)) {
 
                 <div class="col-lg-12 login-form">
                     <div class="col-lg-12 login-form">
-                        <form action="index.php" method="post">
+                        <form method="post">
                             <div class="form-group">
                                 <label class="form-control-label">USERNAME</label>
                                 <input name="username" type="text" class="form-control">
@@ -87,7 +96,7 @@ if(isset($_POST)) {
                                     ?>
                                 </div>
                                 <div class="col-lg-6 login-btm login-button">
-                                    <button type="submit" class="btn btn-outline-primary">LOGIN</button>
+                                    <button name="submit" type="submit" class="btn btn-outline-primary">LOGIN</button>
                                 </div>
                             </div>
                         </form>
@@ -96,10 +105,5 @@ if(isset($_POST)) {
                 <div class="col-lg-3 col-md-2"></div>
             </div>
         </div>
-
-
-
-
-
   </body>
 </html>
