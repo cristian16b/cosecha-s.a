@@ -10,7 +10,12 @@
           ?>
             <li class="c-menu__item is-active" data-toggle="tooltip" title="Registrar Usuario">
               <div class="c-menu__item__inner"><i class="fa fa-user"></i>
-                <div class="c-menu-item__title"><span>Registrar Usuario</span></div>
+                <div class="c-menu-item__title"><span><a href="panelAltaUsuario.php">Registrar Usuario</a></span></div>
+              </div>
+            </li>
+            <li class="c-menu__item is-active" data-toggle="tooltip" title="Listar subusuarios">
+              <div class="c-menu__item__inner"><i class="fa fa-user"></i>
+                <div class="c-menu-item__title"><span><a href="panelListarSubusuarios.php">Listar subusuarios</a></span></div>
               </div>
             </li>
           <?php 
