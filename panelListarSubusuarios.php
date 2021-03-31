@@ -7,64 +7,36 @@ require_once("conexion.php");
 $guardado = false;
 $error = "";
 $sql = "";
-if(isset($_POST["submit"])) {
+$filas = "";
+if(isset($_SESSION)) {
+    $sql = "SELECT u.id,nombre,apellido,cedula,telefono,email 
+                FROM `usuario` u
+                INNER JOIN subusuario su ON su.usuario_id = u.id
+                WHERE su.usuarioCreador_id =  
+            ";
+    $sql .= $_SESSION['id'];
+    echo $sql;
+    $resultado = $conexion->query($sql);
 
-    foreach ($_POST as $clave=>$valor)
-    {
-    // $error .=  "El valor de $clave es: $valor";
-        if($_POST[$clave] == "" && $clave != "submit") {
-            $error .= " Falta completa el campo de " . $clave . ".  <br>";
-        }
-    }
-
-    if($_POST['password'] != $_POST['confirmpassword']) {
-        $error .= "Las contraseñas ingresadas no son iguales.";
-    }
-
-    if($error == "") {
-        $sql = "INSERT 
-            INTO 
-            `usuario`
-            (`nombre`, `apellido`, `cedula`, `telefono`, `email`, `contraseña`, `rol_id`) 
-            VALUES 
-            "
-            ; //([value-2],[value-3],[value-4],[value-5],[value-6],[value-7],[value-8]) 
-        $sql .= " ( " ;
-        $sql .=  "'".trim($_POST['nombre'])."'" . ",";
-        $sql .= "'".trim($_POST['apellido'])."'" . ",";
-        $sql .= "'".trim($_POST['cedula']) ."'". ",";
-        $sql .= "'".trim($_POST['teléfono'])."'" . ",";
-        $sql .= "'".trim($_POST['email'])."'" . ",";
-        $sql .= "'".password_hash($_POST['password'], PASSWORD_DEFAULT)."'" . ",";
-        $sql .= "1";
-        $sql .= " ) ";
-
-        if ($conexion->query($sql) === TRUE) {
-
-            $sql = "SELECT id FROM usuario WHERE email = " ."'" . trim($_POST['email']) ."'";
-            $resultado = $conexion->query($sql);
-            while ($usuario = $resultado->fetch_assoc()) { 
-                $idUsuario = $usuario['id'];
-            }
-            
-
-            //  ([value-1],[value-2],[value-3])"
-            $sql = "INSERT INTO `subusuario`(`usuarioCreador_id`, `usuario_id`) VALUES ";
-            $sql .= " ( ";
-            $sql .= $_SESSION['id'] . " ,";
-            $sql .= $idUsuario;
-            $sql .= " ) ";
-
-            if ($conexion->query($sql) === TRUE) {
-                $guardado = true;
-            }
-            else {
-                $error = "Ocurrio un error al registrar el usuario.";
-            }
+    if($resultado) {
+        if($resultado->num_rows == 0) {
+            $error = "No hay usuarios registrados.";
         }
         else {
-            $error = "Ocurrio un error al registrar el usuario.";
+            
+            while ($usuario = $resultado->fetch_assoc()) {
+                $filas .= "<tr><td>".$usuario['id']
+                ."</td><td>".$usuario['apellido']
+                ."</td><td>".$usuario['nombre']
+                ."</td><td>".$usuario['cedula']
+                ."</td><td>".$usuario['telefono']
+                ."</td><td>".$usuario['email']
+                ."</td></tr>";
+            }
         }
+    }
+    else {
+        $error = "Ocurrio un error inesperado.";
     }
 }
 ?>
@@ -122,21 +94,27 @@ if(isset($_POST["submit"])) {
                     if($error != "") {
                 ?>
                     <div class="alert alert-danger" role="alert" id="registration_fail">
-                        <?php echo $error; ?>
+                        <?php echo $error; echo $sql; ?>
                     </div>
                 <?php
                     }
                 ?>
 
-                <?php 
-                  if($guardado) {
-                ?>
-                    <div class="alert alert-success" role="alert"id="registration_success">Registro completado con exito.</div>
-                <?php
-                  }
-                ?>
-
-                
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Apellido</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Cedula</th>
+                        <th scope="col">Tel</th>
+                        <th scope="col">email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php echo $filas; ?>
+                    </tbody>
+                    </table>
      
                       
                 <!-- <div class="form-group">
