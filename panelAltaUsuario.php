@@ -52,7 +52,7 @@ if(isset($_POST["submit"])) {
 </body>
 <main class="l-main">
   <div class="content-wrapper content-wrapper--with-bg">
-    <h1 class="page-title">Registrar Usuario</h1>
+    <h1 class="page-title">Registrar Subusuario</h1>
     <div class="container">
 
         <form class="well form-horizontal" action="" method="post" id="registration_form">
@@ -61,11 +61,41 @@ if(isset($_POST["submit"])) {
           
                 <legend>Registra un Usuario</legend>
                 <div class="form-group">
-                    <label class="col-md-4 control-label">Name</label>
+                    <label class="col-md-4 control-label">Nombre</label>
                     <div class="col-md-4 ">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                            <input name="name" maxlength="30" placeholder="Name" class="form-control" type="text" onkeypress="return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)" >
+                            <input name="name" maxlength="30" placeholder="Name" class="form-control" type="text"  >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Apellido</label>
+                    <div class="col-md-4 ">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input name="apellido" maxlength="30" placeholder="Apellido" class="form-control" type="text"  >
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Cedular</label>
+                    <div class="col-md-4 ">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input name="cedula" maxlength="30" placeholder="Cedula" class="form-control" type="text"  >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Teléfono</label>
+                    <div class="col-md-4 ">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input name="telefono" maxlength="30" placeholder="Teléfono" class="form-control" type="text"  >
                         </div>
                     </div>
                 </div>
