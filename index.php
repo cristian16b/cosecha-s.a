@@ -40,7 +40,7 @@ if(isset($_POST["submit"])) {
                             header("Location: ./panel.php");
                         } else {
                             $_SESSION['rol'] = "usuario";
-                            header("Location: ./panel.php");
+                            header("Location: ./panelAltaUsuario.php");
                         }
                     }
                     else {
