@@ -5,11 +5,24 @@ require_once("conexion.php");
 ?>
 <?php
 $guardado = false;
+$error = "";
 if(isset($_POST["submit"])) {
-  // var_dump($_POST);
-  if(isset($_POST['name']) && trim($_POST['name']) == "") {
 
-  }
+//   if(isset($_POST['name']) && trim($_POST['name']) == "") {
+//     $error = "Debe cargar el nombre";
+//     echo $error;die;
+//   }
+    foreach ($_POST as $clave=>$valor)
+    {
+    // $error .=  "El valor de $clave es: $valor";
+        if($_POST[$clave] == "" && $clave != "submit") {
+            $error .= " Falta completa el campo de " . $clave . ".  <br>";
+        }
+    }
+
+    if($error == "") {
+
+    }
 }
 ?>
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
@@ -53,6 +66,7 @@ if(isset($_POST["submit"])) {
 <main class="l-main">
   <div class="content-wrapper content-wrapper--with-bg">
     <h1 class="page-title">Registrar Subusuario</h1>
+    <!-- <?php   var_dump($_POST); echo 'error es ' . $error; ?> -->
     <div class="container">
 
         <form class="well form-horizontal" action="" method="post" id="registration_form">
@@ -60,12 +74,23 @@ if(isset($_POST["submit"])) {
 
           
                 <legend>Registra un Usuario</legend>
+
+                <?php 
+                    if($error != "") {
+                ?>
+                    <div class="alert alert-danger" role="alert" id="registration_fail">
+                        <?php echo $error; ?>
+                    </div>
+                <?php
+                    }
+                ?>
+
                 <div class="form-group">
                     <label class="col-md-4 control-label">Nombre</label>
                     <div class="col-md-4 ">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                            <input name="name" maxlength="30" placeholder="Name" class="form-control" type="text"  >
+                            <input name="nombre" maxlength="30" placeholder="Name" class="form-control" type="text"  >
                         </div>
                     </div>
                 </div>
@@ -81,7 +106,7 @@ if(isset($_POST["submit"])) {
                 </div>
                 
                 <div class="form-group">
-                    <label class="col-md-4 control-label">Cedular</label>
+                    <label class="col-md-4 control-label">Cedula</label>
                     <div class="col-md-4 ">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
@@ -95,7 +120,7 @@ if(isset($_POST["submit"])) {
                     <div class="col-md-4 ">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                            <input name="telefono" maxlength="30" placeholder="Teléfono" class="form-control" type="text"  >
+                            <input name="teléfono" maxlength="30" placeholder="Teléfono" class="form-control" type="text"  >
                         </div>
                     </div>
                 </div>
@@ -137,11 +162,10 @@ if(isset($_POST["submit"])) {
                 <?php
                   }
                 ?>
-
                 <div class="form-group">
                     <label class="col-md-4 control-label"></label>
                     <div class="col-md-4">
-                        <button type="submit" class="btn btn-primary login-button">Register</button>
+                        <button name="submit" type="submit" class="btn btn-primary login-button">Register</button>
                     </div>
                 </div>
 

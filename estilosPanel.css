@@ -9,7 +9,7 @@ html, body {
     font-family: "Open Sans";
     font-size: 14px;
     font-weight: 400;
-    overflow: hidden;
+    /* overflow: hidden; */
     background-color: #ececec;
     color: #102c58;
   }
