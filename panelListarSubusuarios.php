@@ -15,7 +15,7 @@ if(isset($_SESSION)) {
                 WHERE su.usuarioCreador_id =  
             ";
     $sql .= $_SESSION['id'];
-    echo $sql;
+    // echo $sql;
     $resultado = $conexion->query($sql);
 
     if($resultado) {
