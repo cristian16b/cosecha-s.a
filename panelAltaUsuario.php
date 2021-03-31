@@ -6,12 +6,9 @@ require_once("conexion.php");
 <?php
 $guardado = false;
 $error = "";
+$sql = "";
 if(isset($_POST["submit"])) {
 
-//   if(isset($_POST['name']) && trim($_POST['name']) == "") {
-//     $error = "Debe cargar el nombre";
-//     echo $error;die;
-//   }
     foreach ($_POST as $clave=>$valor)
     {
     // $error .=  "El valor de $clave es: $valor";
@@ -20,8 +17,54 @@ if(isset($_POST["submit"])) {
         }
     }
 
-    if($error == "") {
+    if($_POST['password'] != $_POST['confirmpassword']) {
+        $error .= "Las contraseñas ingresadas no son iguales.";
+    }
 
+    if($error == "") {
+        $sql = "INSERT 
+            INTO 
+            `usuario`
+            (`nombre`, `apellido`, `cedula`, `telefono`, `email`, `contraseña`, `rol_id`) 
+            VALUES 
+            "
+            ; //([value-2],[value-3],[value-4],[value-5],[value-6],[value-7],[value-8]) 
+        $sql .= " ( " ;
+        $sql .=  "'".trim($_POST['nombre'])."'" . ",";
+        $sql .= "'".trim($_POST['apellido'])."'" . ",";
+        $sql .= "'".trim($_POST['cedula']) ."'". ",";
+        $sql .= "'".trim($_POST['teléfono'])."'" . ",";
+        $sql .= "'".trim($_POST['email'])."'" . ",";
+        $sql .= "'".password_hash($_POST['password'], PASSWORD_DEFAULT)."'" . ",";
+        $sql .= "1";
+        $sql .= " ) ";
+
+        if ($conexion->query($sql) === TRUE) {
+
+            $sql = "SELECT id FROM usuario WHERE email = " ."'" . trim($_POST['email']) ."'";
+            $resultado = $conexion->query($sql);
+            while ($usuario = $resultado->fetch_assoc()) { 
+                $idUsuario = $usuario['id'];
+            }
+            
+
+            //  ([value-1],[value-2],[value-3])"
+            $sql = "INSERT INTO `subusuario`(`usuarioCreador_id`, `usuario_id`) VALUES ";
+            $sql .= " ( ";
+            $sql .= $_SESSION['id'] . " ,";
+            $sql .= $idUsuario;
+            $sql .= " ) ";
+
+            if ($conexion->query($sql) === TRUE) {
+                $guardado = true;
+            }
+            else {
+                $error = "Ocurrio un error al registrar el usuario.";
+            }
+        }
+        else {
+            $error = "Ocurrio un error al registrar el usuario.";
+        }
     }
 }
 ?>
@@ -66,7 +109,7 @@ if(isset($_POST["submit"])) {
 <main class="l-main">
   <div class="content-wrapper content-wrapper--with-bg">
     <h1 class="page-title">Registrar Subusuario</h1>
-    <!-- <?php   var_dump($_POST); echo 'error es ' . $error; ?> -->
+    <?php   //echo $sql; //var_dump($_SESSION); ?>
     <div class="container">
 
         <form class="well form-horizontal" action="" method="post" id="registration_form">
@@ -83,6 +126,14 @@ if(isset($_POST["submit"])) {
                     </div>
                 <?php
                     }
+                ?>
+
+                <?php 
+                  if($guardado) {
+                ?>
+                    <div class="alert alert-success" role="alert"id="registration_success">Registro completado con exito.</div>
+                <?php
+                  }
                 ?>
 
                 <div class="form-group">
@@ -155,13 +206,6 @@ if(isset($_POST["submit"])) {
                     </div>
                 </div>       
                       
-                <?php 
-                  if($guardado) {
-                ?>
-                    <div class="alert alert-success" role="alert"id="registration_success">Registro completado con exito.</div>
-                <?php
-                  }
-                ?>
                 <div class="form-group">
                     <label class="col-md-4 control-label"></label>
                     <div class="col-md-4">
