@@ -21,6 +21,12 @@ if(isset($_POST["submit"])) {
         $error .= "Las contraseñas ingresadas no son iguales.";
     }
 
+    $sql = "SELECT count(id) FROM usuario WHERE email = " ."'" . trim($_POST['email']) ."'";
+    $resultado = $conexion->query($sql);
+    if($resultado->num_rows > 0)  {
+        $error .= "El email se encuentra registrado.";
+    }
+
     if($error == "") {
         $sql = "INSERT 
             INTO 
